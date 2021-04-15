@@ -1,0 +1,31 @@
+IOdictionary propsDict(
+    IOobject(
+        "particleSampleProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED));
+
+const label sampleFrequency(propsDict.get<label>("sampleFrequency"));
+
+const word sampleDirection(propsDict.get<word>("sampleDirection"));
+
+const scalar samplePosition(propsDict.get<scalar>("samplePosition"));
+
+label directionIndex;
+if (sampleDirection == "x")
+{
+    directionIndex = 0;
+}
+else if (sampleDirection == "y")
+{
+    directionIndex = 1;
+}
+else if (sampleDirection == "z")
+{
+    directionIndex = 2;
+}
+else
+{
+    Info << "Error direction name." << endl;
+    return 1;
+}
