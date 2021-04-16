@@ -82,10 +82,6 @@ int main(int argc, char *argv[])
     labelList maxIds(Pstream::nProcs(), -1);
     forAll(timeDirs, timeI)
     {
-        if (timeI % sampleFrequency != 0)
-        {
-            continue;
-        }
         runTime.setTime(timeDirs[timeI], timeI);
         Info << "Time = " << runTime.timeName() << endl;
 
