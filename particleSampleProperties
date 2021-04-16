@@ -20,5 +20,6 @@ sampleDirection x;
 
 samplePosition  0.5;
 
+limitMoveDistanceInOneSample 0.3;
 
 // ************************************************************************* //

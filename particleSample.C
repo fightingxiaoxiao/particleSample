@@ -240,9 +240,8 @@ int main(int argc, char *argv[])
                     auto position = allPositionDict[key];
                     auto _position = _allPositionDict[key];
 
-                    if (position[2] < 0.)
+                    if (mag(position - _position) > limitMoveDistanceInOneSample)
                         continue;
-
                     if (_position[directionIndex] < samplePosition && position[directionIndex] >= samplePosition)
                     {
                         particleMassRate += allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];

@@ -11,6 +11,8 @@ const word sampleDirection(propsDict.get<word>("sampleDirection"));
 
 const scalar samplePosition(propsDict.get<scalar>("samplePosition"));
 
+const scalar limitMoveDistanceInOneSample(propsDict.get<scalar>("limitMoveDistanceInOneSample"));
+
 label directionIndex;
 if (sampleDirection == "x")
 {
