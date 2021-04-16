@@ -36,6 +36,7 @@ Description
 \*---------------------------------------------------------------------------*/
 #include <map>
 #include <cmath>
+#include <fstream>
 
 #include "argList.H"
 #include "Cloud.H"
@@ -151,6 +152,8 @@ int main(int argc, char *argv[])
     std::map<label, label> allnParticleDict;
     std::map<label, label> _allnParticleDict = {};
 
+    std::ofstream totalMassRateOut("./postProcessing/totalMassRate");
+    totalMassRateOut << "Time, MassRate" << endl;
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
@@ -242,6 +245,7 @@ int main(int argc, char *argv[])
 
                     if (mag(position - _position) > limitMoveDistanceInOneSample)
                         continue;
+
                     if (_position[directionIndex] < samplePosition && position[directionIndex] >= samplePosition)
                     {
                         particleMassRate += allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];
@@ -254,6 +258,7 @@ int main(int argc, char *argv[])
             }
 
             Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
+            totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
             Info << "\n\n"
                  << endl;
 
@@ -264,6 +269,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    totalMassRateOut.close();
     Info << "End\n"
          << endl;
 
