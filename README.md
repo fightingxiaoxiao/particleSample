@@ -4,6 +4,10 @@
 
 用于对OpenFOAM的lagrangian颗粒进行采样。
 
+## 版本适配
+
+* OpenFOAM-v2012
+
 ## 安装
 
 创建一个保管第三方代码的文件夹如`extend`，然后从github仓库克隆代码。
