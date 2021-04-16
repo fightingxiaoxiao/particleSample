@@ -81,6 +81,10 @@ int main(int argc, char *argv[])
     labelList maxIds(Pstream::nProcs(), -1);
     forAll(timeDirs, timeI)
     {
+        if (timeI % sampleFrequency != 0)
+        {
+            continue;
+        }
         runTime.setTime(timeDirs[timeI], timeI);
         Info << "Time = " << runTime.timeName() << endl;
 
@@ -150,6 +154,10 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
+        if (timeI % sampleFrequency != 0)
+        {
+            continue;
+        }
         Info << "Time = " << runTime.timeName() << endl;
 
         List<pointField> allPositions(Pstream::nProcs());
@@ -243,7 +251,10 @@ int main(int argc, char *argv[])
                 }
             }
 
-            Info << "The particle flow rate is " << particleMassRate/runTime.deltaTValue() << endl;
+            Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
+            Info << "\n\n"
+                 << endl;
+
             _allPositionDict = allPositionDict;
             _allRhoDict = allRhoDict;
             _allDDict = allDDict;
