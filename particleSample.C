@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
             }
 
             Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
-            totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
+            totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency <<"\n"<< endl;
             Info << "\n\n"
                  << endl;
 
