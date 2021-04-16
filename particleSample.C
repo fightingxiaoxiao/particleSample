@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     std::map<label, label> _allnParticleDict = {};
 
     std::ofstream totalMassRateOut("./postProcessing/totalMassRate");
-    totalMassRateOut << "Time, MassRate" << endl;
+    totalMassRateOut << "Time, MassRate" << std::endl;
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
