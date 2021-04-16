@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
 
     std::ofstream totalMassRateOut("./postProcessing/totalMassRate");
     totalMassRateOut << "Time, MassRate" << std::endl;
+
+    scalar particleMassRate = 0.;
+
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
-        if (timeI % sampleFrequency != 0)
-        {
-            continue;
-        }
+
         Info << "Time = " << runTime.timeName() << endl;
 
         List<pointField> allPositions(Pstream::nProcs());
@@ -230,7 +230,6 @@ int main(int argc, char *argv[])
                 }
             }
 
-            scalar particleMassRate = 0.;
             if (_allPositionDict.size() == 0)
             {
                 Info << "This is the first data." << endl;
@@ -255,8 +254,12 @@ int main(int argc, char *argv[])
                         particleMassRate -= allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];
                     }
                 }
-                Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
-                totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency << std::endl;
+                if (timeI % sampleFrequency == 0)
+                {
+                    Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
+                    totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency << std::endl;
+                    particleMassRate = 0.;
+                }
             }
 
             Info << "\n\n"
