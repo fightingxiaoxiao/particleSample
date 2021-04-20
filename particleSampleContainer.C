@@ -9,6 +9,8 @@ namespace Foam
         for (auto &p : particleStorage)
         {
             label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
+            if (hIndex < 0)
+                continue;
             diameterList[hIndex].push_back(p.second.d);
         }
     }
@@ -19,6 +21,8 @@ namespace Foam
         for (auto &p : particleStorage)
         {
             label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
+            if (hIndex < 0)
+                continue;
             velocityList[hIndex].push_back(mag(p.second.U));
         }
     }
@@ -32,6 +36,8 @@ namespace Foam
         for (auto &p : particleStorage)
         {
             label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
+            if (hIndex < 0)
+                continue;
             if (massRateList.find(hIndex) == massRateList.end())
             {
                 massRateList[hIndex] = 0.;
