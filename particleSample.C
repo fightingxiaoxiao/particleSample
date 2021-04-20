@@ -241,6 +241,7 @@ int main(int argc, char *argv[])
             {
                 auto particleContainer = particleSampleContainer();
 
+#pragma omp parallel for
                 for (auto &keyTwice : allPositionDict)
                 {
                     label key = keyTwice.first;
