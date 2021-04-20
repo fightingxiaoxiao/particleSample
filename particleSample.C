@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
             _allRhoDict = allRhoDict;
             _allDDict = allDDict;
             _allnParticleDict = allnParticleDict;
-            _allnParticleDict = allUDict;
+            _allUDict = allUDict;
         }
     }
 
