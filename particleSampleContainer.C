@@ -75,4 +75,23 @@ namespace Foam
         return diameterInfo.str();
     }
 
+    word particleSampleContainer::writeVelocityInfo(scalar startHeight,
+                                                    scalar deltaH)
+    {
+        std::stringstream velocityInfo("");
+        velocityInfo << "height, velmag0, velmag1..." << std::endl;
+        for (auto &v : velocityList)
+        {
+            velocityInfo << startHeight + v.first * deltaH;
+
+            for (auto &data : v.second)
+            {
+                velocityInfo << "," << mag(data);
+            }
+
+            velocityInfo << std::endl;
+        }
+        return velocityInfo.str();
+    }
+
 }

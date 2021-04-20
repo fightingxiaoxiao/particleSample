@@ -250,29 +250,14 @@ int main(int argc, char *argv[])
                                                                             allnParticleDict[key],
                                                                             allPositionDict[key],
                                                                             allUDict[key]);
-                    /*
-                    particleContainer.classifyFlowRateAlongHeight(-0.1,
-                                                                  0.05,
+
+                    particleContainer.classifyFlowRateAlongHeight(startHeight,
+                                                                  deltaH,
                                                                   directionIndex,
                                                                   samplePosition,
                                                                   limitMoveDistanceInOneSample);
-                    */
-                    /*
-                    auto position = allPositionDict[key];
-                    auto _position = _allPositionDict[key];
-                    if (mag(position - _position) > limitMoveDistanceInOneSample)
-                        continue;
-
-                    if (_position[directionIndex] < samplePosition && position[directionIndex] >= samplePosition)
-                    {
-                        particleMassRate += allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];
-                    }
-                    else if (_position[directionIndex] > samplePosition && position[directionIndex] <= samplePosition)
-                    {
-                        particleMassRate -= allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];
-                    }
-                    */
                 }
+
                 if (timeI % sampleFrequency == 0)
                 {
                     std::stringstream diamDataDir("postProcessing/diamDistribution/");
@@ -285,16 +270,16 @@ int main(int argc, char *argv[])
                     system(makeVelDir.str());
 
                     std::ofstream diam(diamDataDir.str() + runTime.timeName());
-
-                    std::cout << diamDataDir.str() + runTime.timeName() << std::endl;
-
                     std::ofstream vel(velDataDir.str() + runTime.timeName());
 
-                    particleContainer.classifyDiameterAlongHeight(-0.1, 0.05);
-                    particleContainer.classifyVelocityAlongHeight(-0.1, 0.05);
+                    particleContainer.classifyDiameterAlongHeight(startHeight, deltaH);
+                    particleContainer.classifyVelocityAlongHeight(startHeight, deltaH);
 
-                    diam << particleContainer.writeDiameterInfo(-0.1, 0.05);
+                    diam << particleContainer.writeDiameterInfo(startHeight, deltaH);
+                    vel << particleContainer.writeVelocityInfo(startHeight, deltaH);
+
                     diam.close();
+                    vel.close();
                 }
             }
             Info << "\n\n"

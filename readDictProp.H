@@ -13,6 +13,10 @@ const scalar samplePosition(propsDict.get<scalar>("samplePosition"));
 
 const scalar limitMoveDistanceInOneSample(propsDict.get<scalar>("limitMoveDistanceInOneSample"));
 
+const scalar startHeight(propsDict.get<scalar>("startHeight"));
+
+const scalar deltaH(propsDict.get<scalar>("deltaH"));
+
 label directionIndex;
 if (sampleDirection == "x")
 {
