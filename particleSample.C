@@ -278,8 +278,8 @@ int main(int argc, char *argv[])
                     std::stringstream diamDataDir("postProcessing/diamDistribution/");
                     std::stringstream velDataDir("postProcessing/velDistribution/");
 
-                    diamDataDir << runTime.timeName();
-                    velDataDir << runTime.timeName();
+                    diamDataDir << timeDirs[timeI];
+                    velDataDir << timeDirs[timeI];
 
                     std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
                     std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
