@@ -257,37 +257,34 @@ int main(int argc, char *argv[])
                                                                              _allnParticleDict[key],
                                                                              _allPositionDict[key],
                                                                              _allUDict[key]);
-                    
-                    particleContainer.classifyFlowRateAlongHeight(startHeight,
-                                                                  deltaH,
-                                                                  directionIndex,
-                                                                  samplePosition,
-                                                                  limitMoveDistanceInOneSample);
                 }
 
-                if (timeI % sampleFrequency == 0)
-                {
-                    std::stringstream diamDataDir("postProcessing/diamDistribution/");
-                    std::stringstream velDataDir("postProcessing/velDistribution/");
+                particleContainer.classifyFlowRateAlongHeight(startHeight,
+                                                              deltaH,
+                                                              directionIndex,
+                                                              samplePosition,
+                                                              limitMoveDistanceInOneSample);
 
-                    std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
-                    std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
+                std::stringstream diamDataDir("postProcessing/diamDistribution/");
+                std::stringstream velDataDir("postProcessing/velDistribution/");
 
-                    system(makeDiamDir.str());
-                    system(makeVelDir.str());
+                std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
+                std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
 
-                    std::ofstream diam(diamDataDir.str() + runTime.timeName());
-                    std::ofstream vel(velDataDir.str() + runTime.timeName());
+                system(makeDiamDir.str());
+                system(makeVelDir.str());
 
-                    particleContainer.classifyDiameterAlongHeight(startHeight, deltaH);
-                    particleContainer.classifyVelocityAlongHeight(startHeight, deltaH);
+                std::ofstream diam(diamDataDir.str() + runTime.timeName());
+                std::ofstream vel(velDataDir.str() + runTime.timeName());
 
-                    diam << particleContainer.writeDiameterInfo(startHeight, deltaH);
-                    vel << particleContainer.writeVelocityInfo(startHeight, deltaH);
+                particleContainer.classifyDiameterAlongHeight(startHeight, deltaH);
+                particleContainer.classifyVelocityAlongHeight(startHeight, deltaH);
 
-                    diam.close();
-                    vel.close();
-                }
+                diam << particleContainer.writeDiameterInfo(startHeight, deltaH);
+                vel << particleContainer.writeVelocityInfo(startHeight, deltaH);
+
+                diam.close();
+                vel.close();
             }
             Info << "\n\n"
                  << endl;
