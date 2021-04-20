@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 
                     std::ofstream diam(diamDataDir.str());
  
-                    std::cout << diamDataDir << std::endl;
+                    std::cout << diamDataDir.str() << std::endl;
 
                     std::ofstream vel(diamDataDir.str());
 
