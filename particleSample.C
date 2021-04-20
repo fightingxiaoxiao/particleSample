@@ -53,6 +53,7 @@ Description
 #include "basicKinematicCloud.H"
 #define basicKinematicTypeCloud basicKinematicCloud
 
+#include "particleSampleContainer.H"
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -139,6 +140,9 @@ int main(int argc, char *argv[])
     std::map<label, vector> allPositionDict;
     std::map<label, vector> _allPositionDict = {};
 
+    std::map<label, vector> allUDict;
+    std::map<label, vector> _allUDict = {};
+
     std::map<label, scalar> allRhoDict;
     std::map<label, scalar> _allRhoDict = {};
 
@@ -148,11 +152,6 @@ int main(int argc, char *argv[])
     std::map<label, label> allnParticleDict;
     std::map<label, label> _allnParticleDict = {};
 
-    std::ofstream totalMassRateOut("./postProcessing/totalMassRate");
-    totalMassRateOut << "Time, MassRate" << std::endl;
-
-    scalar particleMassRate = 0.;
-
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
@@ -160,6 +159,7 @@ int main(int argc, char *argv[])
         Info << "Time = " << runTime.timeName() << endl;
 
         List<pointField> allPositions(Pstream::nProcs());
+        List<pointField> allU(Pstream::nProcs());
 
         List<scalarField> allD(Pstream::nProcs());
         List<scalarField> allRho(Pstream::nProcs());
@@ -177,6 +177,10 @@ int main(int argc, char *argv[])
             kinematicCloud.size(),
             point::zero);
 
+        allU[Pstream::myProcNo()].setSize(
+            kinematicCloud.size(),
+            point::zero);
+
         allD[Pstream::myProcNo()].setSize(kinematicCloud.size(), Zero);
         allRho[Pstream::myProcNo()].setSize(kinematicCloud.size(), Zero);
 
@@ -188,6 +192,7 @@ int main(int argc, char *argv[])
         for (const auto &p : kinematicCloud)
         {
             allPositions[Pstream::myProcNo()][i] = p.position();
+            allU[Pstream::myProcNo()][i] = p.U();
 
             allD[Pstream::myProcNo()][i] = p.d();
             allRho[Pstream::myProcNo()][i] = p.rho();
@@ -201,6 +206,7 @@ int main(int argc, char *argv[])
 
         // Collect the data on the master processor
         Pstream::gatherList(allPositions);
+        Pstream::gatherList(allU);
         Pstream::gatherList(allD);
         Pstream::gatherList(allRho);
         Pstream::gatherList(allnParticle);
@@ -218,6 +224,7 @@ int main(int argc, char *argv[])
                         startIds[allOrigProcs[proci][i]] + allOrigIds[proci][i];
 
                     allPositionDict[globalId] = allPositions[proci][i];
+                    allUDict[globalId] = allU[proci][i];
 
                     allRhoDict[globalId] = allRho[proci][i];
                     allDDict[globalId] = allD[proci][i];
@@ -232,12 +239,27 @@ int main(int argc, char *argv[])
             }
             else
             {
+                auto particleContainer = particleSampleContainer();
+
                 for (auto &keyTwice : allPositionDict)
                 {
-                    auto key = keyTwice.first;
+                    label key = keyTwice.first;
+
+                    particleContainer.particleStorage[key] = SampleParticle(allDDict[key],
+                                                                            allRhoDict[key],
+                                                                            allnParticleDict[key],
+                                                                            allPositionDict[key],
+                                                                            allUDict[key]);
+                    /*
+                    particleContainer.classifyFlowRateAlongHeight(-0.1,
+                                                                  0.05,
+                                                                  directionIndex,
+                                                                  samplePosition,
+                                                                  limitMoveDistanceInOneSample);
+                    */
+                    /*
                     auto position = allPositionDict[key];
                     auto _position = _allPositionDict[key];
-
                     if (mag(position - _position) > limitMoveDistanceInOneSample)
                         continue;
 
@@ -249,15 +271,32 @@ int main(int argc, char *argv[])
                     {
                         particleMassRate -= allnParticleDict[key] * 4 / 3 * M_PI * Foam::pow(allDDict[key] / 2., 3.) * allRhoDict[key];
                     }
+                    */
                 }
                 if (timeI % sampleFrequency == 0)
                 {
-                    Info << "The particle flow rate is " << particleMassRate / runTime.deltaTValue() / sampleFrequency << endl;
-                    totalMassRateOut << runTime.timeName() << ", " << particleMassRate / runTime.deltaTValue() / sampleFrequency << std::endl;
-                    particleMassRate = 0.;
+                    std::stringstream diamDataDir("./postProcessing/diamDistribution/");
+                    std::stringstream velDataDir("./postProcessing/velDistribution/");
+                    diamDataDir << runTime.timeName();
+                    velDataDir << runTime.timeName();
+
+                    std::stringstream makeDiamDir("mkdir -p ");
+                    std::stringstream makeVelDir("mkdir -p ");
+
+                    makeDiamDir << diamDataDir.str();
+                    makeVelDir << velDataDir.str();
+
+                    system(makeDiamDir.str());
+                    system(makeVelDir.str());
+
+                    std::ofstream diam(diamDataDir.str());
+                    std::ofstream vel(diamDataDir.str());
+
+                    particleContainer.classifyDiameterAlongHeight(-0.1, 0.05);
+                    particleContainer.classifyVelocityAlongHeight(-0.1, 0.05);
+                    particleContainer.writeDiameterInfo(-0.1, 0.05);
                 }
             }
-
             Info << "\n\n"
                  << endl;
 
@@ -265,10 +304,10 @@ int main(int argc, char *argv[])
             _allRhoDict = allRhoDict;
             _allDDict = allDDict;
             _allnParticleDict = allnParticleDict;
+            _allnParticleDict = allUDict;
         }
     }
 
-    totalMassRateOut.close();
     Info << "End\n"
          << endl;
 

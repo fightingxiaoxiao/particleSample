@@ -1,3 +1,5 @@
+SampleParticle.C
+particleSampleContainer.C
 particleSample.C
 
 EXE = $(FOAM_APPBIN)/particleSample
