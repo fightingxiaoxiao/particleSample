@@ -278,20 +278,17 @@ int main(int argc, char *argv[])
                     std::stringstream diamDataDir("postProcessing/diamDistribution/");
                     std::stringstream velDataDir("postProcessing/velDistribution/");
 
-                    diamDataDir << runTime.timeName() << std::endl;
-                    velDataDir << runTime.timeName() << std::endl;
-
                     std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
                     std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
 
                     system(makeDiamDir.str());
                     system(makeVelDir.str());
 
-                    std::ofstream diam(diamDataDir.str());
+                    std::ofstream diam(diamDataDir.str() + runTime.timeName());
 
-                    std::cout << diamDataDir.str() << std::endl;
+                    std::cout << diamDataDir.str() + runTime.timeName() << std::endl;
 
-                    std::ofstream vel(diamDataDir.str());
+                    std::ofstream vel(velDataDir.str() + runTime.timeName());
 
                     particleContainer.classifyDiameterAlongHeight(-0.1, 0.05);
                     particleContainer.classifyVelocityAlongHeight(-0.1, 0.05);
