@@ -294,6 +294,7 @@ int main(int argc, char *argv[])
 
                     particleContainer.classifyDiameterAlongHeight(-0.1, 0.05);
                     particleContainer.classifyVelocityAlongHeight(-0.1, 0.05);
+                    
                     particleContainer.writeDiameterInfo(-0.1, 0.05);
                 }
             }
