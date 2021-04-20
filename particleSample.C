@@ -251,13 +251,18 @@ int main(int argc, char *argv[])
                                                                             allnParticleDict[key],
                                                                             allPositionDict[key],
                                                                             allUDict[key]);
-                    /*
+
+                    particleContainer._particleStorage[key] = SampleParticle(_allDDict[key],
+                                                                             _allRhoDict[key],
+                                                                             _allnParticleDict[key],
+                                                                             _allPositionDict[key],
+                                                                             _allUDict[key]);
+                    
                     particleContainer.classifyFlowRateAlongHeight(startHeight,
                                                                   deltaH,
                                                                   directionIndex,
                                                                   samplePosition,
                                                                   limitMoveDistanceInOneSample);
-                                                                  */
                 }
 
                 if (timeI % sampleFrequency == 0)
