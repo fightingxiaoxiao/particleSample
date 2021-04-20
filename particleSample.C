@@ -275,16 +275,14 @@ int main(int argc, char *argv[])
                 }
                 if (timeI % sampleFrequency == 0)
                 {
-                    std::stringstream diamDataDir("./postProcessing/diamDistribution/");
-                    std::stringstream velDataDir("./postProcessing/velDistribution/");
+                    std::stringstream diamDataDir("postProcessing/diamDistribution/");
+                    std::stringstream velDataDir("postProcessing/velDistribution/");
+
                     diamDataDir << runTime.timeName();
                     velDataDir << runTime.timeName();
 
-                    std::stringstream makeDiamDir("mkdir -p ");
-                    std::stringstream makeVelDir("mkdir -p ");
-
-                    makeDiamDir << diamDataDir.str();
-                    makeVelDir << velDataDir.str();
+                    std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
+                    std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
 
                     system(makeDiamDir.str());
                     system(makeVelDir.str());
