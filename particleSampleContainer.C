@@ -86,7 +86,7 @@ namespace Foam
 
             for (auto &data : v.second)
             {
-                velocityInfo << "," << mag(data);
+                velocityInfo << "," << data;
             }
 
             velocityInfo << std::endl;
