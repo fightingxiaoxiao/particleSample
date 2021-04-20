@@ -288,6 +288,9 @@ int main(int argc, char *argv[])
                     system(makeVelDir.str());
 
                     std::ofstream diam(diamDataDir.str());
+ 
+                    std::cout << diamDataDir << std::endl;
+
                     std::ofstream vel(diamDataDir.str());
 
                     particleContainer.classifyDiameterAlongHeight(-0.1, 0.05);
