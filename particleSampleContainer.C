@@ -54,11 +54,11 @@ namespace Foam
 
             if (_position[directionIndex] < samplePosition && position[directionIndex] >= samplePosition)
             {
-                massRateList[hIndex] += p.second.mass();
+                massRateList[hIndex] += p.second.mass() / deltaH;
             }
             else if (_position[directionIndex] > samplePosition && position[directionIndex] <= samplePosition)
             {
-                massRateList[hIndex] -= p.second.mass();
+                massRateList[hIndex] -= p.second.mass() / deltaH;
             }
         }
     }
@@ -121,7 +121,7 @@ namespace Foam
         {
             totalFlowRate += m.second;
         }
-        
+
         return std::to_string(totalFlowRate);
     }
 
