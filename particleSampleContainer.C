@@ -8,9 +8,9 @@ namespace Foam
     {
         for (auto &p : particleStorage)
         {
-            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
-            if (hIndex < 0)
+            if (p.second.position[2] - startHeight < 0)
                 continue;
+            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
             diameterList[hIndex].push_back(p.second.d);
         }
     }
@@ -20,9 +20,9 @@ namespace Foam
     {
         for (auto &p : particleStorage)
         {
-            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
-            if (hIndex < 0)
+            if (p.second.position[2] - startHeight < 0)
                 continue;
+            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
             velocityList[hIndex].push_back(mag(p.second.U));
         }
     }
@@ -35,9 +35,10 @@ namespace Foam
     {
         for (auto &p : particleStorage)
         {
-            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
-            if (hIndex < 0)
+            if (p.second.position[2] - startHeight < 0)
                 continue;
+            label hIndex = static_cast<label>((p.second.position[2] - startHeight) / deltaH);
+
             if (massRateList.find(hIndex) == massRateList.end())
             {
                 massRateList[hIndex] = 0.;
@@ -97,7 +98,31 @@ namespace Foam
 
             velocityInfo << std::endl;
         }
+
         return velocityInfo.str();
+    }
+
+    word particleSampleContainer::writeFlowRateInfo(scalar startHeight,
+                                                    scalar deltaH)
+    {
+        std::stringstream writeFlowRateInfo("");
+        for (auto &m : massRateList)
+        {
+            writeFlowRateInfo << startHeight + m.first * deltaH << ", " << m.second << std::endl;
+        }
+
+        return writeFlowRateInfo.str();
+    }
+
+    word particleSampleContainer::writeTotalFlowRate(scalar startHeight)
+    {
+        scalar totalFlowRate = 0.;
+        for (auto &m : massRateList)
+        {
+            totalFlowRate += m.second;
+        }
+        
+        return std::to_string(totalFlowRate);
     }
 
 }

@@ -37,7 +37,10 @@ namespace Foam
         word writeVelocityInfo(scalar startHeight,
                                scalar deltaH);
 
-        word writeFlowrateInfo();
+        word writeFlowRateInfo(scalar startHeight,
+                               scalar deltaH);
+
+        word writeTotalFlowRate(scalar startHeight);
     };
 }
 #endif
