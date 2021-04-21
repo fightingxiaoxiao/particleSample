@@ -152,6 +152,8 @@ int main(int argc, char *argv[])
     std::map<label, label> allnParticleDict;
     std::map<label, label> _allnParticleDict = {};
 
+    std::stringstream totalFlowRate("");
+    system("mkdir -p postProcessing");
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
@@ -267,24 +269,32 @@ int main(int argc, char *argv[])
 
                 std::stringstream diamDataDir("postProcessing/diamDistribution/");
                 std::stringstream velDataDir("postProcessing/velDistribution/");
+                std::stringstream flowRateDataDir("postProcessing/flowRateDistribution/");
 
-                std::stringstream makeDiamDir("mkdir -p postProcessing/diamDistribution/");
-                std::stringstream makeVelDir("mkdir -p postProcessing/velDistribution/");
-
-                system(makeDiamDir.str());
-                system(makeVelDir.str());
+                system("mkdir -p " + diamDataDir.str());
+                system("mkdir -p " + velDataDir.str());
+                system("mkdir -p " + flowRateDataDir.str());
 
                 std::ofstream diam(diamDataDir.str() + runTime.timeName());
                 std::ofstream vel(velDataDir.str() + runTime.timeName());
+                std::ofstream flowRate(flowRateDataDir.str() + runTime.timeName());
 
                 particleContainer.classifyDiameterAlongHeight(startHeight, deltaH);
                 particleContainer.classifyVelocityAlongHeight(startHeight, deltaH);
 
                 diam << particleContainer.writeDiameterInfo(startHeight, deltaH);
                 vel << particleContainer.writeVelocityInfo(startHeight, deltaH);
+                flowRate << particleContainer.writeFlowRateInfo(startHeight, deltaH);
 
                 diam.close();
                 vel.close();
+                flowRate.close();
+
+                totalFlowRate << runTime.timeName() << ", " << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
+
+                std::ofstream flowRateInfo("postProcessing/totalFlowRate");
+                flowRateInfo << totalFlowRate.str();
+                flowRateInfo.close();
             }
             Info << "\n\n"
                  << endl;
