@@ -153,7 +153,6 @@ int main(int argc, char *argv[])
     std::map<label, label> _allnParticleDict = {};
 
     std::stringstream totalFlowRate("");
-    system("mkdir -p postProcessing");
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
@@ -217,7 +216,6 @@ int main(int argc, char *argv[])
 
         if (Pstream::master())
         {
-
             forAll(allPositions, proci)
             {
                 forAll(allPositions[proci], i)
@@ -238,6 +236,7 @@ int main(int argc, char *argv[])
             if (_allPositionDict.size() == 0)
             {
                 Info << "This is the first data." << endl;
+                system("mkdir -p postProcessing");
             }
             else
             {
