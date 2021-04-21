@@ -17,6 +17,8 @@ const scalar startHeight(propsDict.get<scalar>("startHeight"));
 
 const scalar deltaH(propsDict.get<scalar>("deltaH"));
 
+label dynamicParticleListLength(propsDict.get<label>("dynamicParticleListLength"));
+
 label directionIndex;
 if (sampleDirection == "x")
 {

@@ -80,33 +80,36 @@ int main(int argc, char *argv[])
     //mkDir(vtkPath);
 
     // get the particle list length on each processor
-    labelList maxIds(Pstream::nProcs(), -1);
-    forAll(timeDirs, timeI)
+    labelList maxIds(Pstream::nProcs(), dynamicParticleListLength);
+    if (maxIds[0] == -1)
     {
-        runTime.setTime(timeDirs[timeI], timeI);
-        Info << "Time = " << runTime.timeName() << endl;
+        forAll(timeDirs, timeI)
+        {
+            runTime.setTime(timeDirs[timeI], timeI);
+            Info << "Time = " << runTime.timeName() << endl;
 
-        Info << "    Reading particle positions" << endl;
+            Info << "    Reading particle positions" << endl;
 
 #include "readFields.H"
 
-        Info << "    Read " << returnReduce(kinematicCloud.size(), sumOp<label>())
-             << " particles" << endl;
+            Info << "    Read " << returnReduce(kinematicCloud.size(), sumOp<label>())
+                 << " particles" << endl;
 
-        for (const auto &p : kinematicCloud)
-        {
-            const label origId = p.origId();
-            const label origProc = p.origProc();
-
-            if (origProc >= maxIds.size())
+            for (const auto &p : kinematicCloud)
             {
-                maxIds.setSize(origProc + 1, -1);
-            }
+                const label origId = p.origId();
+                const label origProc = p.origProc();
 
-            maxIds[origProc] = max(maxIds[origProc], origId);
+                if (origProc >= maxIds.size())
+                {
+                    maxIds.setSize(origProc + 1, -1);
+                }
+
+                maxIds[origProc] = max(maxIds[origProc], origId);
+            }
         }
     }
-
+    
     label maxNProcs = returnReduce(maxIds.size(), maxOp<label>());
 
     Info << "Detected particles originating from " << maxNProcs
