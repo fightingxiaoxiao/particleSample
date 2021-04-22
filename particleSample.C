@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
         {
             forAll(allPositions, proci)
             {
+#pragma omp parallel for
                 forAll(allPositions[proci], i)
                 {
                     label globalId =
@@ -245,7 +246,6 @@ int main(int argc, char *argv[])
             {
                 auto particleContainer = particleSampleContainer();
 
-#pragma omp parallel for
                 for (auto &keyTwice : allPositionDict)
                 {
                     label key = keyTwice.first;
