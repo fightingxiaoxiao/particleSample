@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    
+
     label maxNProcs = returnReduce(maxIds.size(), maxOp<label>());
 
     Info << "Detected particles originating from " << maxNProcs
@@ -295,7 +295,8 @@ int main(int argc, char *argv[])
                 totalFlowRate << runTime.timeName() << ", " << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
 
                 std::ofstream flowRateInfo("postProcessing/totalFlowRate");
-                flowRateInfo << totalFlowRate.str();
+                flowRateInfo << "Time, flowRate\n"
+                             << totalFlowRate.str();
                 flowRateInfo.close();
             }
             Info << "\n\n"
