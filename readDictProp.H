@@ -5,8 +5,6 @@ IOdictionary propsDict(
         mesh,
         IOobject::MUST_READ_IF_MODIFIED));
 
-const label sampleFrequency(propsDict.get<label>("sampleFrequency"));
-
 const word sampleDirection(propsDict.get<word>("sampleDirection"));
 
 const scalar samplePosition(propsDict.get<scalar>("samplePosition"));
