@@ -219,6 +219,7 @@ int main(int argc, char *argv[])
 
         if (Pstream::master())
         {
+            std::vector<label> IDList;
             forAll(allPositions, proci)
             {
 #pragma omp parallel for
@@ -226,6 +227,10 @@ int main(int argc, char *argv[])
                 {
                     label globalId =
                         startIds[allOrigProcs[proci][i]] + allOrigIds[proci][i];
+#pragma omp critical
+                    {
+                        IDList.push_back(globalId);
+                    }
 
                     allPositionDict[globalId] = allPositions[proci][i];
                     allUDict[globalId] = allU[proci][i];
@@ -246,10 +251,9 @@ int main(int argc, char *argv[])
             {
                 auto particleContainer = particleSampleContainer();
 
-                for (auto &keyTwice : allPositionDict)
+#pragma omp parallel for
+                for (auto &key : IDList)
                 {
-                    label key = keyTwice.first;
-
                     particleContainer.particleStorage[key] = SampleParticle(allDDict[key],
                                                                             allRhoDict[key],
                                                                             allnParticleDict[key],
