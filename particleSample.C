@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
                 vel.close();
                 flowRate.close();
 
-                totalFlowRate << runTime.timeName() << ", " << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
+                totalFlowRate << runTime.timeName() << ", " << std::setprecision(12) << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
 
                 std::ofstream flowRateInfo("postProcessing/totalFlowRate");
                 flowRateInfo << "Time, flowRate\n"
