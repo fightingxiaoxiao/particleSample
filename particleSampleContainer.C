@@ -114,7 +114,7 @@ namespace Foam
         return writeFlowRateInfo.str();
     }
 
-    word particleSampleContainer::writeTotalFlowRate(scalar startHeight)
+    scalar particleSampleContainer::writeTotalFlowRate(scalar startHeight)
     {
         scalar totalFlowRate = 0.;
         for (auto &m : massRateList)
@@ -122,7 +122,7 @@ namespace Foam
             totalFlowRate += m.second;
         }
 
-        return std::to_string(totalFlowRate);
+        return totalFlowRate;
     }
 
 }
