@@ -37,6 +37,8 @@ Description
 #include <map>
 #include <cmath>
 #include <fstream>
+#include <iostream>
+#include <iomanip>
 
 #include "argList.H"
 #include "Cloud.H"
@@ -222,7 +224,7 @@ int main(int argc, char *argv[])
             std::vector<label> IDList;
             forAll(allPositions, proci)
             {
-#pragma omp parallel for
+//#pragma omp parallel for
                 forAll(allPositions[proci], i)
                 {
                     label globalId =
@@ -251,7 +253,7 @@ int main(int argc, char *argv[])
             {
                 auto particleContainer = particleSampleContainer();
 
-#pragma omp parallel for
+//#pragma omp parallel for
                 for (auto &key : IDList)
                 {
                     particleContainer.particleStorage[key] = SampleParticle(allDDict[key],
@@ -296,7 +298,7 @@ int main(int argc, char *argv[])
                 vel.close();
                 flowRate.close();
 
-                totalFlowRate << runTime.timeName() << ", " << std::setprecision(12) << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
+                totalFlowRate << runTime.timeName() << ", " << std::setprecision(std::numeric_limits<double>::digits10) << particleContainer.writeTotalFlowRate(startHeight) << std::endl;
 
                 std::ofstream flowRateInfo("postProcessing/totalFlowRate");
                 flowRateInfo << "Time, flowRate\n"
